@@ -25,7 +25,7 @@ async function main() {
   await sql`
     create table if not exists entrepreneur_profiles (
       id uuid primary key default gen_random_uuid(),
-      user_id uuid references users(id) on delete cascade,
+      user_id uuid unique references users(id) on delete cascade,
       bio text,
       idea_summary text,
       pitch_video_url text,
@@ -40,7 +40,7 @@ async function main() {
   await sql`
     create table if not exists investor_profiles (
       id uuid primary key default gen_random_uuid(),
-      user_id uuid references users(id) on delete cascade,
+      user_id uuid unique references users(id) on delete cascade,
       firm_name text,
       sectors text[] default '{}',
       ticket_size_min numeric,
@@ -73,7 +73,8 @@ async function main() {
       other_links text,
       is_verified boolean default false,
       created_at timestamptz default now(),
-      updated_at timestamptz default now()
+      updated_at timestamptz default now(),
+      unique (owner_id, title)
     );
   `;
 

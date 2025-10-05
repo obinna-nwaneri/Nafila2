@@ -1,4 +1,3 @@
-import { submitIdea } from "@/app/actions";
 import { Suspense } from "react";
 import { IdeaForm } from "@/components/idea-form";
 
@@ -13,7 +12,7 @@ export default function IdeaCreatePage() {
         </p>
       </div>
       <Suspense fallback={<div className="text-slate-400">Loading form...</div>}>
-        <IdeaForm action={submitIdea} />
+        <IdeaForm />
       </Suspense>
     </div>
   );

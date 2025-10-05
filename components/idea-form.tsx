@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Loader2, Upload } from "lucide-react";
 
 const fields = [
@@ -13,19 +14,47 @@ const fields = [
   { id: "traction", label: "Traction / Validation", placeholder: "Highlight customers, pilots, or metrics." }
 ];
 
-export function IdeaForm({ action }: { action: (state: unknown, formData: FormData) => Promise<void> }) {
+export function IdeaForm() {
   const { data: session } = useSession();
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const ownerId = session?.user?.id ?? "00000000-0000-0000-0000-000000000000";
 
   const handleSubmit = async (formData: FormData) => {
     setPending(true);
     setMessage(null);
     try {
-      await action(null, formData);
+      const payload = {
+        ownerId,
+        title: String(formData.get("title") ?? ""),
+        problem: String(formData.get("problem") ?? ""),
+        solution: String(formData.get("solution") ?? ""),
+        market: String(formData.get("market") ?? ""),
+        businessModel: String(formData.get("businessModel") ?? ""),
+        financials: String(formData.get("financials") ?? ""),
+        traction: String(formData.get("traction") ?? ""),
+        sector: String(formData.get("sector") ?? ""),
+        location: String(formData.get("location") ?? ""),
+        pitchUrl: formData.get("pitchUrl") ? String(formData.get("pitchUrl")) : null,
+        instagram: formData.get("instagram") ? String(formData.get("instagram")) : null,
+        otherLinks: formData.get("otherLinks") ? String(formData.get("otherLinks")) : null
+      };
+
+      const response = await fetch("/api/ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
       setMessage("Idea submitted successfully. Moderators will review shortly.");
       formRef.current?.reset();
+      router.refresh();
     } catch (error) {
       console.error(error);
       setMessage("Unable to submit idea. Please try again later.");
@@ -33,8 +62,6 @@ export function IdeaForm({ action }: { action: (state: unknown, formData: FormDa
       setPending(false);
     }
   };
-
-  const ownerId = session?.user?.id ?? "00000000-0000-0000-0000-000000000000";
 
   return (
     <form

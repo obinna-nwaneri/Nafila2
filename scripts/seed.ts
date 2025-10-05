@@ -3,7 +3,7 @@ import {
   primaryInvestors,
   socialFeed,
   users,
-} from "../src/lib/sampleData";
+} from "../src/lib/sampleData.ts";
 
 import { config as loadEnv } from "dotenv";
 import { neon } from "@neondatabase/serverless";

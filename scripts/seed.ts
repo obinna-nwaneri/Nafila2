@@ -22,6 +22,8 @@ async function main() {
     );
   `;
 
+  await sql`create unique index if not exists users_email_key on users(email);`;
+
   await sql`
     create table if not exists entrepreneur_profiles (
       id uuid primary key default gen_random_uuid(),
@@ -35,6 +37,11 @@ async function main() {
       avatar_url text,
       created_at timestamptz default now()
     );
+  `;
+
+  await sql`
+    create unique index if not exists entrepreneur_profiles_user_id_idx
+    on entrepreneur_profiles(user_id);
   `;
 
   await sql`
@@ -53,6 +60,11 @@ async function main() {
       website_url text,
       created_at timestamptz default now()
     );
+  `;
+
+  await sql`
+    create unique index if not exists investor_profiles_user_id_idx
+    on investor_profiles(user_id);
   `;
 
   await sql`
@@ -76,6 +88,11 @@ async function main() {
       updated_at timestamptz default now(),
       unique (owner_id, title)
     );
+  `;
+
+  await sql`
+    create unique index if not exists ideas_owner_id_title_idx
+    on ideas(owner_id, title);
   `;
 
   await sql`

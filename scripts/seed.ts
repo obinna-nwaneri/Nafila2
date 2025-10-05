@@ -79,6 +79,9 @@ async function main() {
     comments integer default 0
   )`;
 
+  const toJsonb = (value: unknown) =>
+    value === undefined || value === null ? null : JSON.stringify(value);
+
   for (const user of users) {
     await sql`
       insert into users (
@@ -93,9 +96,9 @@ async function main() {
         ${user.avatarUrl ?? null},
         ${user.bio ?? null},
         ${user.location ?? null},
-        ${user.socialHandles ? sql.json(user.socialHandles) : null},
-        ${user.verification ? sql.json(user.verification) : null},
-        ${user.metrics ? sql.json(user.metrics) : null}
+        ${toJsonb(user.socialHandles)},
+        ${toJsonb(user.verification)},
+        ${toJsonb(user.metrics)}
       )
       on conflict (id) do update set
         name = excluded.name,
@@ -129,7 +132,7 @@ async function main() {
         ${idea.financialProjections},
         ${idea.traction},
         ${idea.location},
-        ${idea.media ? sql.json(idea.media) : null},
+        ${toJsonb(idea.media)},
         ${idea.status},
         ${idea.targetRaise ?? null},
         ${idea.followers},

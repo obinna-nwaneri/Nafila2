@@ -35,6 +35,13 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 ```
 DATABASE_URL=postgresql://neondb_owner:npg_ZMgvT4APVa9C@ep-icy-fire-adel044n-pooler.c-2.us-east-1.aws.neon.tech/nafila3?sslmode=require&channel_binding=require
 ```
+Sample seeded accounts
+
+Amina Yusuf – entrepreneur (email amina@nafila.africa, password Nafila@2024)
+
+Kwame Mensah – investor (email kwame.mensah@panthera.vc, password InvestSmart!2024)
+
+Nafila Admin – administrator (email admin@nafila.africa, password AdminSecure#2024)
 
 ## Features
 
